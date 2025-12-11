@@ -14,3 +14,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/development
+          jwk-set-uri: http://localhost:8081/realms/development/protocol/openid-connect/certs
