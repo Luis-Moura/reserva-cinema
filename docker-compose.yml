@@ -1,6 +1,7 @@
 services:
 
   keycloak:
+    container_name: keycloak
     image: quay.io/keycloak/keycloak:26.4.7
     environment:
       - KEYCLOAK_ADMIN=admin
@@ -17,6 +18,7 @@ services:
       - postgres-keycloak
 
   postgres-keycloak:
+    container_name: keycloak-postgres
     image: postgres:15
     environment:
       POSTGRES_DB: database
@@ -28,6 +30,7 @@ services:
       - keycloak_pgdata:/var/lib/postgresql/data
 
   application-postgres:
+    container_name: application-postgres
     image: postgres:15
     environment:
       POSTGRES_DB: app_db
@@ -39,6 +42,7 @@ services:
       - app_pgdata:/var/lib/postgresql/data
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4:latest
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
