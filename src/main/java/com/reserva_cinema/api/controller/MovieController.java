@@ -4,13 +4,11 @@ import com.reserva_cinema.api.dto.req.CreateMovie;
 import com.reserva_cinema.api.dto.res.MovieResponse;
 import com.reserva_cinema.service.MovieService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -28,5 +26,14 @@ public class MovieController {
         MovieResponse createdMovieResponse = movieService.createMovie(movieRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMovieResponse);
+    }
+
+    @GetMapping("/public/movies")
+    public ResponseEntity<Page<MovieResponse>> getAllMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        Page<MovieResponse> moviesPage = movieService.getAllMovies(page, size);
+        return ResponseEntity.ok(moviesPage);
     }
 }
