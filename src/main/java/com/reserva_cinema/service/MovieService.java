@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class MovieService {
 
@@ -42,5 +44,12 @@ public class MovieService {
         Page<MovieEntity> movieEntitiesPage = movieRepository.findAll(pageable);
 
         return movieEntitiesPage.map(movieMapper::toResponse);
+    }
+
+    public MovieResponse getMovieById(UUID id) {
+        MovieEntity movieEntity = movieRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Movie not found with id: " + id));
+
+        return movieMapper.toResponse(movieEntity);
     }
 }

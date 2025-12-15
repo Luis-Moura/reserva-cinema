@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api")
 public class MovieController {
@@ -34,6 +36,14 @@ public class MovieController {
             @RequestParam(defaultValue = "10") int size
     ){
         Page<MovieResponse> moviesPage = movieService.getAllMovies(page, size);
+
         return ResponseEntity.ok(moviesPage);
+    }
+
+    @GetMapping("/public/movie/{id}")
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable("id") UUID id) {
+        MovieResponse movieResponse = movieService.getMovieById(id);
+
+        return ResponseEntity.ok(movieResponse);
     }
 }
