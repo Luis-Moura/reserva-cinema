@@ -52,4 +52,17 @@ public class MovieService {
 
         return movieMapper.toResponse(movieEntity);
     }
+
+    public MovieResponse updateMovie(UUID id, CreateMovie request) {
+        MovieEntity movieEntity = movieRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Movie not found with id: " + id));
+
+        movieEntity.setTitle(request.title());
+        movieEntity.setDescription(request.description());
+        movieEntity.setDurationMinutes(request.durationMinutes());
+
+        movieEntity = movieRepository.save(movieEntity);
+
+        return movieMapper.toResponse(movieEntity);
+    }
 }
