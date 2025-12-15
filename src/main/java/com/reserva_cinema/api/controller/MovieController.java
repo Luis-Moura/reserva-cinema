@@ -56,4 +56,11 @@ public class MovieController {
         MovieResponse updatedMovieResponse = movieService.updateMovie(id, movieRequest);
         return ResponseEntity.ok(updatedMovieResponse);
     }
+
+    @DeleteMapping("/movie/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteMovie(@PathVariable("id") UUID id) {
+        movieService.deleteMovie(id);
+        return ResponseEntity.noContent().build();
+    }
 }

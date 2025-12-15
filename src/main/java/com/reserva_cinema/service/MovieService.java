@@ -65,4 +65,11 @@ public class MovieService {
 
         return movieMapper.toResponse(movieEntity);
     }
+
+    public void deleteMovie(UUID id) {
+        MovieEntity movieEntity = movieRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Movie not found with id: " + id));
+
+        movieRepository.delete(movieEntity);
+    }
 }
