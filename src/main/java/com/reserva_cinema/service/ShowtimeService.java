@@ -9,6 +9,8 @@ import com.reserva_cinema.domain.entity.ShowtimeEntity;
 import com.reserva_cinema.domain.mapper.ShowtimeMapper;
 import com.reserva_cinema.repository.MovieRepository;
 import com.reserva_cinema.repository.ShowtimeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,5 +41,13 @@ public class ShowtimeService {
         showtimeEntity = showtimeRepository.save(showtimeEntity);
 
         return showtimeMapper.toResponse(showtimeEntity);
+    }
+
+    public Page<ShowtimeResponse> getAllShowtimes(int page, int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+
+        Page<ShowtimeEntity> showtimeEntitiesPage = showtimeRepository.findAll(pageable);
+
+        return showtimeEntitiesPage.map(showtimeMapper::toResponse);
     }
 }
