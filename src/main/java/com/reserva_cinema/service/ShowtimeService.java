@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ShowtimeService {
     private final ShowtimeRepository showtimeRepository;
@@ -56,5 +58,31 @@ public class ShowtimeService {
                 .orElseThrow(() -> new NotFoundException("Showtime not found with id: " + id));
 
         return showtimeMapper.toResponse(showtimeEntity);
+    }
+
+    public ShowtimeResponse updateShowtime(UUID id, CreateShowtime request) {
+        ShowtimeEntity existingShowtime = showtimeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Showtime not found with id: " + id));
+
+        if (showtimeRepository.existsByMovieIdAndStartTimeBetween(
+                request.movieId(),
+                request.startTime(),
+                request.endTime())) {
+            throw new BadRequestException("Showtime overlaps with an existing showtime for the same movie.");
+        };
+
+        MovieEntity movieEntity = movieRepository.findById(request.movieId()).orElseThrow(
+                () -> new NotFoundException("Movie not found with id: " + request.movieId())
+        );
+
+        existingShowtime.setStartTime(request.startTime());
+        existingShowtime.setEndTime(request.endTime());
+        existingShowtime.setTotalSeats(request.totalSeats());
+        existingShowtime.setPriceInCents(request.priceInCents());
+        existingShowtime.setMovie(movieEntity);
+
+        ShowtimeEntity updatedShowtime = showtimeRepository.save(existingShowtime);
+
+        return showtimeMapper.toResponse(updatedShowtime);
     }
 }

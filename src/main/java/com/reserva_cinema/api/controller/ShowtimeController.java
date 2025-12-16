@@ -44,4 +44,14 @@ public class ShowtimeController {
         ShowtimeResponse showtimeResponse = showtimeService.getShowtimeById(id);
         return ResponseEntity.ok(showtimeResponse);
     }
+
+    @PutMapping("/showtime/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ShowtimeResponse> updateShowtime(
+            @PathVariable("id") UUID id,
+            @Valid @RequestBody CreateShowtime showtimeRequest
+    ) {
+        ShowtimeResponse updatedShowtimeResponse = showtimeService.updateShowtime(id, showtimeRequest);
+        return ResponseEntity.ok(updatedShowtimeResponse);
+    }
 }
