@@ -54,4 +54,11 @@ public class ShowtimeController {
         ShowtimeResponse updatedShowtimeResponse = showtimeService.updateShowtime(id, showtimeRequest);
         return ResponseEntity.ok(updatedShowtimeResponse);
     }
+
+    @DeleteMapping("/showtime/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteShowtime(@PathVariable("id") UUID id) {
+        showtimeService.deleteShowtime(id);
+        return ResponseEntity.noContent().build();
+    }
 }

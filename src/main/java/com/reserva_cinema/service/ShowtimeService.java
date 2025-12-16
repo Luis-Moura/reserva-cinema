@@ -85,4 +85,11 @@ public class ShowtimeService {
 
         return showtimeMapper.toResponse(updatedShowtime);
     }
+
+    public void deleteShowtime(UUID id) {
+        ShowtimeEntity existingShowtime = showtimeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Showtime not found with id: " + id));
+
+        showtimeRepository.delete(existingShowtime);
+    }
 }
