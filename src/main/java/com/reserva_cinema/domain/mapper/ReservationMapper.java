@@ -6,6 +6,8 @@ import com.reserva_cinema.domain.entity.ShowtimeEntity;
 import com.reserva_cinema.domain.entity.UserEntity;
 import com.reserva_cinema.domain.enums.ReservationStatus;
 
+import java.util.List;
+
 public class ReservationMapper {
     public ReservationEntity toEntity(
             ReservationStatus status,
@@ -22,13 +24,14 @@ public class ReservationMapper {
         return entity;
     }
 
-    public ReservationResponse toResponse(ReservationEntity entity) {
+    public ReservationResponse toResponse(ReservationEntity entity, List<Integer> seatNumbers) {
         return new ReservationResponse(
                 entity.getId(),
                 entity.getStatus(),
                 entity.getTotalPrice(),
                 entity.getShowtime().getId(),
-                entity.getUser().getId()
+                entity.getUser().getId(),
+                seatNumbers
         );
     }
 }
