@@ -7,10 +7,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record CreateShowtime (
-        @NotBlank(message = "Start time is required")
         LocalDateTime startTime,
 
-        @NotBlank(message = "End time is required")
         LocalDateTime endTime,
 
         @NotNull(message = "Total seats is required")
@@ -19,7 +17,6 @@ public record CreateShowtime (
         @NotNull(message = "Price in cents is required")
         Integer priceInCents,
 
-        @NotBlank(message = "Movie ID is required")
         UUID movieId
 ) {
 }
