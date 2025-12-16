@@ -4,6 +4,7 @@ import com.reserva_cinema.domain.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -14,4 +15,5 @@ public class ReservationResponse {
     private Integer totalPrice;
     private UUID showtimeId;
     private String userId;
+    private List<Integer> seatNumbers;
 }
