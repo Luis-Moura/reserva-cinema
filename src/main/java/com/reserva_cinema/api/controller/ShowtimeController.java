@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api")
 public class ShowtimeController {
@@ -35,5 +37,11 @@ public class ShowtimeController {
         Page<ShowtimeResponse> showtimesPage = showtimeService.getAllShowtimes(page, size);
 
         return ResponseEntity.ok(showtimesPage);
+    }
+
+    @GetMapping("/public/showtime/{id}")
+    public ResponseEntity<ShowtimeResponse> getShowtimeById(@PathVariable("id") UUID id) {
+        ShowtimeResponse showtimeResponse = showtimeService.getShowtimeById(id);
+        return ResponseEntity.ok(showtimeResponse);
     }
 }

@@ -50,4 +50,11 @@ public class ShowtimeService {
 
         return showtimeEntitiesPage.map(showtimeMapper::toResponse);
     }
+
+    public ShowtimeResponse getShowtimeById(java.util.UUID id) {
+        ShowtimeEntity showtimeEntity = showtimeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Showtime not found with id: " + id));
+
+        return showtimeMapper.toResponse(showtimeEntity);
+    }
 }
