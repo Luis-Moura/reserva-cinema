@@ -19,7 +19,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 public class ReservationService {
@@ -105,5 +108,18 @@ public class ReservationService {
         }
 
         return reservationMapper.toResponse(reservationEntity, request.seatNumbers());
+    }
+
+    public List<Integer> getAvailableSeats(UUID showtimeId) {
+        ShowtimeEntity showtime = showtimeRepository.findById(showtimeId).
+                orElseThrow(() -> new NotFoundException("Showtime not found with id: " + showtimeId));
+
+        List<Integer> reservedSeats = reservationSeatRepository.findSeatNumbersByShowtimeId(showtimeId);
+
+        return IntStream
+                .rangeClosed(1, showtime.getTotalSeats())
+                .boxed()
+                .filter(seat -> !reservedSeats.contains(seat))
+                .toList();
     }
 }
