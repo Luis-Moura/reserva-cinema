@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Table(name = "reservation_Seats")
+@Table(
+        name = "reservation_seats",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"showtime_id", "seat_number"})
+        }
+)
 @Builder
 @Data
 @NoArgsConstructor
@@ -19,10 +24,14 @@ public class ReservationSeatEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", nullable = false)
     private ReservationEntity reservation;
 
-    @Column(name = "seat_number", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "showtime_id", nullable = false)
+    private ShowtimeEntity showtime;
+
+    @Column(nullable = false)
     private Integer seatNumber;
 }
