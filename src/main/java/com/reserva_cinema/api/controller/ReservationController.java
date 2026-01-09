@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -33,5 +33,13 @@ public class ReservationController {
         ReservationResponse response = reservationService.createReservation(request, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/available-seats/{showtimeId}")
+    public ResponseEntity<List<Integer>> getAvailableSeats(
+            @PathVariable("showtimeId") UUID showtimeId
+    ) {
+        List<Integer> availableSeats = reservationService.getAvailableSeats(showtimeId);
+        return ResponseEntity.ok(availableSeats);
     }
 }
