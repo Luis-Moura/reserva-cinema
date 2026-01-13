@@ -16,6 +16,9 @@ import com.reserva_cinema.repository.ShowtimeRepository;
 import com.reserva_cinema.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -121,5 +124,27 @@ public class ReservationService {
                 .boxed()
                 .filter(seat -> !reservedSeats.contains(seat))
                 .toList();
+    }
+
+    public Page<ReservationResponse> getAllReservations(int page, int size, String userId) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<ReservationEntity> reservations =
+                reservationRepository.findAllByUserId(pageable, userId);
+
+        return reservations.map(reservation -> {
+            List<Integer> seatNumbers =
+                    reservationSeatRepository
+                            .findSeatNumbersByReservationId(reservation.getId());
+
+            return new ReservationResponse(
+                    reservation.getId(),
+                    reservation.getStatus(),
+                    reservation.getTotalPrice(),
+                    reservation.getShowtime().getId(),
+                    reservation.getUser().getId(),
+                    seatNumbers
+            );
+        });
     }
 }
