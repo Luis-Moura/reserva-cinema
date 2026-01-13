@@ -147,4 +147,27 @@ public class ReservationService {
             );
         });
     }
+
+    public void cancelReservation(UUID reservationId, String userId) {
+        ReservationEntity reservationEntity = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NotFoundException("Reservation not found with id: " + reservationId));
+
+        ShowtimeEntity showtimeEntity = showtimeRepository.findById(reservationEntity.getShowtime().getId())
+                .orElseThrow(() -> new NotFoundException("Showtime not found with id: " + reservationEntity.getShowtime().getId()));
+
+        if (showtimeEntity.getStartTime().isBefore(java.time.LocalDateTime.now())) {
+            throw new BadRequestException("Cannot cancel a reservation for a showtime that has already started.");
+        }
+
+        if (!reservationEntity.getUser().getId().equals(userId)) {
+            throw new BadRequestException("You are not authorized to cancel this reservation.");
+        }
+
+        if (reservationEntity.getStatus() == ReservationStatus.CANCELLED) {
+            throw new BadRequestException("Reservation is already cancelled.");
+        }
+
+        reservationEntity.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservationEntity);
+    }
 }
