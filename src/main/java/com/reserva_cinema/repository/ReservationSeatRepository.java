@@ -18,4 +18,13 @@ public interface ReservationSeatRepository extends JpaRepository<ReservationSeat
     """
     )
     List<Integer> findSeatNumbersByShowtimeId(UUID showtimeId);
+
+    @Query(
+    """
+        select rs.seatNumber
+        from ReservationSeatEntity rs
+        where rs.reservation.id = :reservationId
+    """
+    )
+    List<Integer> findSeatNumbersByReservationId(UUID reservationId);
 }
