@@ -4,6 +4,7 @@ import com.reserva_cinema.api.dto.req.CreateReservation;
 import com.reserva_cinema.api.dto.res.ReservationResponse;
 import com.reserva_cinema.service.ReservationService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,5 +42,17 @@ public class ReservationController {
     ) {
         List<Integer> availableSeats = reservationService.getAvailableSeats(showtimeId);
         return ResponseEntity.ok(availableSeats);
+    }
+
+    @GetMapping("/user/reservations")
+    public ResponseEntity<Page<ReservationResponse>> getUserReservation(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        String userId = jwt.getSubject();
+        Page<ReservationResponse> response = reservationService.getAllReservations(page, size, userId);
+
+        return ResponseEntity.ok(response);
     }
 }
